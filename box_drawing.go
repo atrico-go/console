@@ -1,5 +1,10 @@
 package console
 
+import (
+	"fmt"
+	"strings"
+)
+
 type BoxType int
 
 const (
@@ -10,7 +15,21 @@ const (
 	BoxHeavy  BoxType = 3
 )
 
-func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) string {
+func (bt BoxType) String() string {
+	switch bt {
+	case BoxNone:
+		return "None"
+	case BoxSingle:
+		return "Single"
+	case BoxDouble:
+		return "Double"
+	case BoxHeavy:
+		return "Heavy"
+	}
+	panic("Unknown box type")
+}
+
+func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) (char string, ok bool) {
 	upBt := ConditionalBoxType(up, boxType, BoxNone)
 	downBt := ConditionalBoxType(down, boxType, BoxNone)
 	leftBt := ConditionalBoxType(left, boxType, BoxNone)
@@ -18,8 +37,42 @@ func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) stri
 	return GetBoxCharMixed(upBt, downBt, leftBt, rightBt)
 }
 
-func GetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) string {
-	return boxParts[createDir(up, down, left, right)]
+func GetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) (char string, ok bool) {
+	char, ok = boxParts[createDir(up, down, left, right)]
+	return char, ok
+}
+
+func MustGetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) string {
+	upBt := ConditionalBoxType(up, boxType, BoxNone)
+	downBt := ConditionalBoxType(down, boxType, BoxNone)
+	leftBt := ConditionalBoxType(left, boxType, BoxNone)
+	rightBt := ConditionalBoxType(right, boxType, BoxNone)
+	return MustGetBoxCharMixed(upBt, downBt, leftBt, rightBt)
+}
+
+func MustGetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) string {
+	if char, ok := GetBoxCharMixed(up, down, left, right); ok {
+		return char
+	}
+	msg := strings.Builder{}
+	msg.WriteString("Box drawing character not found: ")
+	sep := ""
+	if up != BoxNone {
+		msg.WriteString(fmt.Sprintf("%sup=%s", sep, up))
+		sep = ", "
+	}
+	if down != BoxNone {
+		msg.WriteString(fmt.Sprintf("%sdown=%s", sep, down))
+		sep = ", "
+	}
+	if left != BoxNone {
+		msg.WriteString(fmt.Sprintf("%sleft=%s", sep, left))
+		sep = ", "
+	}
+	if right != BoxNone {
+		msg.WriteString(fmt.Sprintf("%sright=%s", sep, right))
+	}
+	panic(msg.String())
 }
 
 func ConditionalBoxType(c bool, t BoxType, f BoxType) BoxType {
