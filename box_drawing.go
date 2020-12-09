@@ -75,6 +75,14 @@ func MustGetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) 
 	panic(msg.String())
 }
 
+func GetHorizontal(bt BoxType) string {
+	return MustGetBoxChar(false,false, true,true, bt)
+}
+
+func GetVertical(bt BoxType) string {
+	return MustGetBoxChar( true,true,false,false, bt)
+}
+
 func ConditionalBoxType(c bool, t BoxType, f BoxType) BoxType {
 	if c {
 		return t
