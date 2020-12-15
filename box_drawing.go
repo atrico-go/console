@@ -29,7 +29,7 @@ func (bt BoxType) String() string {
 	panic("Unknown box type")
 }
 
-func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) (char string, ok bool) {
+func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) (char rune, ok bool) {
 	upBt := ConditionalBoxType(up, boxType, BoxNone)
 	downBt := ConditionalBoxType(down, boxType, BoxNone)
 	leftBt := ConditionalBoxType(left, boxType, BoxNone)
@@ -37,12 +37,12 @@ func GetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) (cha
 	return GetBoxCharMixed(upBt, downBt, leftBt, rightBt)
 }
 
-func GetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) (char string, ok bool) {
+func GetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) (char rune, ok bool) {
 	char, ok = boxParts[createDir(up, down, left, right)]
 	return char, ok
 }
 
-func MustGetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) string {
+func MustGetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) rune {
 	upBt := ConditionalBoxType(up, boxType, BoxNone)
 	downBt := ConditionalBoxType(down, boxType, BoxNone)
 	leftBt := ConditionalBoxType(left, boxType, BoxNone)
@@ -50,7 +50,7 @@ func MustGetBoxChar(up bool, down bool, left bool, right bool, boxType BoxType) 
 	return MustGetBoxCharMixed(upBt, downBt, leftBt, rightBt)
 }
 
-func MustGetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) string {
+func MustGetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) rune {
 	if char, ok := GetBoxCharMixed(up, down, left, right); ok {
 		return char
 	}
@@ -75,11 +75,11 @@ func MustGetBoxCharMixed(up BoxType, down BoxType, left BoxType, right BoxType) 
 	panic(msg.String())
 }
 
-func GetHorizontal(bt BoxType) string {
+func GetHorizontal(bt BoxType) rune {
 	return MustGetBoxChar(false,false, true,true, bt)
 }
 
-func GetVertical(bt BoxType) string {
+func GetVertical(bt BoxType) rune {
 	return MustGetBoxChar( true,true,false,false, bt)
 }
 
@@ -134,127 +134,127 @@ func createDir(up BoxType, down BoxType, left BoxType, right BoxType) direction 
 	return *d.setUp(up).setDown(down).setLeft(left).setRight(right)
 }
 
-var boxParts = map[direction]string{
+var boxParts = map[direction]rune{
 	// Space
-	createDir(BoxNone, BoxNone, BoxNone, BoxNone): " ",
+	createDir(BoxNone, BoxNone, BoxNone, BoxNone): ' ',
 	// Half lines
-	createDir(BoxSingle, BoxNone, BoxNone, BoxNone): "╵",
-	createDir(BoxNone, BoxSingle, BoxNone, BoxNone): "╷",
-	createDir(BoxNone, BoxNone, BoxSingle, BoxNone): "╴",
-	createDir(BoxNone, BoxNone, BoxNone, BoxSingle): "╶",
-	createDir(BoxHeavy, BoxNone, BoxNone, BoxNone):  "╹",
-	createDir(BoxNone, BoxHeavy, BoxNone, BoxNone):  "╻",
-	createDir(BoxNone, BoxNone, BoxHeavy, BoxNone):  "╸",
-	createDir(BoxNone, BoxNone, BoxNone, BoxHeavy):  "╺",
+	createDir(BoxSingle, BoxNone, BoxNone, BoxNone): '╵',
+	createDir(BoxNone, BoxSingle, BoxNone, BoxNone): '╷',
+	createDir(BoxNone, BoxNone, BoxSingle, BoxNone): '╴',
+	createDir(BoxNone, BoxNone, BoxNone, BoxSingle): '╶',
+	createDir(BoxHeavy, BoxNone, BoxNone, BoxNone):  '╹',
+	createDir(BoxNone, BoxHeavy, BoxNone, BoxNone):  '╻',
+	createDir(BoxNone, BoxNone, BoxHeavy, BoxNone):  '╸',
+	createDir(BoxNone, BoxNone, BoxNone, BoxHeavy):  '╺',
 	// Full lines
-	createDir(BoxSingle, BoxSingle, BoxNone, BoxNone): "│",
-	createDir(BoxNone, BoxNone, BoxSingle, BoxSingle): "─",
-	createDir(BoxDouble, BoxDouble, BoxNone, BoxNone): "║",
-	createDir(BoxNone, BoxNone, BoxDouble, BoxDouble): "═",
-	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxNone):   "┃",
-	createDir(BoxNone, BoxNone, BoxHeavy, BoxHeavy):   "━",
-	createDir(BoxHeavy, BoxSingle, BoxNone, BoxNone):  "╿ ",
-	createDir(BoxSingle, BoxHeavy, BoxNone, BoxNone):  "╽",
-	createDir(BoxNone, BoxNone, BoxHeavy, BoxSingle):  "╾",
-	createDir(BoxNone, BoxNone, BoxSingle, BoxHeavy):  "╼",
+	createDir(BoxSingle, BoxSingle, BoxNone, BoxNone): '│',
+	createDir(BoxNone, BoxNone, BoxSingle, BoxSingle): '─',
+	createDir(BoxDouble, BoxDouble, BoxNone, BoxNone): '║',
+	createDir(BoxNone, BoxNone, BoxDouble, BoxDouble): '═',
+	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxNone):   '┃',
+	createDir(BoxNone, BoxNone, BoxHeavy, BoxHeavy):   '━',
+	createDir(BoxHeavy, BoxSingle, BoxNone, BoxNone):  '╿',
+	createDir(BoxSingle, BoxHeavy, BoxNone, BoxNone):  '╽',
+	createDir(BoxNone, BoxNone, BoxHeavy, BoxSingle):  '╾',
+	createDir(BoxNone, BoxNone, BoxSingle, BoxHeavy):  '╼',
 	// Up-Left
-	createDir(BoxSingle, BoxNone, BoxSingle, BoxNone): "┘",
-	createDir(BoxDouble, BoxNone, BoxDouble, BoxNone): "╝",
-	createDir(BoxDouble, BoxNone, BoxSingle, BoxNone): "╜",
-	createDir(BoxSingle, BoxNone, BoxDouble, BoxNone): "╛",
-	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxNone):   "┛",
-	createDir(BoxHeavy, BoxNone, BoxSingle, BoxNone):  "┚",
-	createDir(BoxSingle, BoxNone, BoxHeavy, BoxNone):  "┙",
+	createDir(BoxSingle, BoxNone, BoxSingle, BoxNone): '┘',
+	createDir(BoxDouble, BoxNone, BoxDouble, BoxNone): '╝',
+	createDir(BoxDouble, BoxNone, BoxSingle, BoxNone): '╜',
+	createDir(BoxSingle, BoxNone, BoxDouble, BoxNone): '╛',
+	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxNone):   '┛',
+	createDir(BoxHeavy, BoxNone, BoxSingle, BoxNone):  '┚',
+	createDir(BoxSingle, BoxNone, BoxHeavy, BoxNone):  '┙',
 	// Up-Right
-	createDir(BoxSingle, BoxNone, BoxNone, BoxSingle): "└",
-	createDir(BoxDouble, BoxNone, BoxNone, BoxDouble): "╚",
-	createDir(BoxDouble, BoxNone, BoxNone, BoxSingle): "╙",
-	createDir(BoxSingle, BoxNone, BoxNone, BoxDouble): "╘",
-	createDir(BoxHeavy, BoxNone, BoxNone, BoxHeavy):   "┗",
-	createDir(BoxHeavy, BoxNone, BoxNone, BoxSingle):  "┖",
-	createDir(BoxSingle, BoxNone, BoxNone, BoxHeavy):  "┕",
+	createDir(BoxSingle, BoxNone, BoxNone, BoxSingle): '└',
+	createDir(BoxDouble, BoxNone, BoxNone, BoxDouble): '╚',
+	createDir(BoxDouble, BoxNone, BoxNone, BoxSingle): '╙',
+	createDir(BoxSingle, BoxNone, BoxNone, BoxDouble): '╘',
+	createDir(BoxHeavy, BoxNone, BoxNone, BoxHeavy):   '┗',
+	createDir(BoxHeavy, BoxNone, BoxNone, BoxSingle):  '┖',
+	createDir(BoxSingle, BoxNone, BoxNone, BoxHeavy):  '┕',
 	// Down-Left
-	createDir(BoxNone, BoxSingle, BoxSingle, BoxNone): "┐",
-	createDir(BoxNone, BoxDouble, BoxDouble, BoxNone): "╗",
-	createDir(BoxNone, BoxDouble, BoxSingle, BoxNone): "╖",
-	createDir(BoxNone, BoxSingle, BoxDouble, BoxNone): "╕",
-	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxNone):   "┓",
-	createDir(BoxNone, BoxHeavy, BoxSingle, BoxNone):  "┒",
-	createDir(BoxNone, BoxSingle, BoxHeavy, BoxNone):  "┑",
+	createDir(BoxNone, BoxSingle, BoxSingle, BoxNone): '┐',
+	createDir(BoxNone, BoxDouble, BoxDouble, BoxNone): '╗',
+	createDir(BoxNone, BoxDouble, BoxSingle, BoxNone): '╖',
+	createDir(BoxNone, BoxSingle, BoxDouble, BoxNone): '╕',
+	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxNone):   '┓',
+	createDir(BoxNone, BoxHeavy, BoxSingle, BoxNone):  '┒',
+	createDir(BoxNone, BoxSingle, BoxHeavy, BoxNone):  '┑',
 	// Down-Right
-	createDir(BoxNone, BoxSingle, BoxNone, BoxSingle): "┌",
-	createDir(BoxNone, BoxDouble, BoxNone, BoxDouble): "╔",
-	createDir(BoxNone, BoxDouble, BoxNone, BoxSingle): "╓",
-	createDir(BoxNone, BoxSingle, BoxNone, BoxDouble): "╒",
-	createDir(BoxNone, BoxHeavy, BoxNone, BoxHeavy):   "┏",
-	createDir(BoxNone, BoxHeavy, BoxNone, BoxSingle):  "┎",
-	createDir(BoxNone, BoxSingle, BoxNone, BoxHeavy):  "┍",
+	createDir(BoxNone, BoxSingle, BoxNone, BoxSingle): '┌',
+	createDir(BoxNone, BoxDouble, BoxNone, BoxDouble): '╔',
+	createDir(BoxNone, BoxDouble, BoxNone, BoxSingle): '╓',
+	createDir(BoxNone, BoxSingle, BoxNone, BoxDouble): '╒',
+	createDir(BoxNone, BoxHeavy, BoxNone, BoxHeavy):   '┏',
+	createDir(BoxNone, BoxHeavy, BoxNone, BoxSingle):  '┎',
+	createDir(BoxNone, BoxSingle, BoxNone, BoxHeavy):  '┍',
 	// T-Up
-	createDir(BoxSingle, BoxNone, BoxSingle, BoxSingle): "┴",
-	createDir(BoxDouble, BoxNone, BoxDouble, BoxDouble): "╩",
-	createDir(BoxSingle, BoxNone, BoxDouble, BoxDouble): "╧",
-	createDir(BoxDouble, BoxNone, BoxSingle, BoxSingle): "╨",
-	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxHeavy):    "┻",
-	createDir(BoxSingle, BoxNone, BoxHeavy, BoxHeavy):   "┷",
-	createDir(BoxHeavy, BoxNone, BoxSingle, BoxSingle):  "┸",
-	createDir(BoxHeavy, BoxNone, BoxSingle, BoxHeavy):   "┺",
-	createDir(BoxSingle, BoxNone, BoxHeavy, BoxSingle):  "┵",
-	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxSingle):   "┹",
-	createDir(BoxSingle, BoxNone, BoxSingle, BoxHeavy):  "┶",
+	createDir(BoxSingle, BoxNone, BoxSingle, BoxSingle): '┴',
+	createDir(BoxDouble, BoxNone, BoxDouble, BoxDouble): '╩',
+	createDir(BoxSingle, BoxNone, BoxDouble, BoxDouble): '╧',
+	createDir(BoxDouble, BoxNone, BoxSingle, BoxSingle): '╨',
+	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxHeavy):    '┻',
+	createDir(BoxSingle, BoxNone, BoxHeavy, BoxHeavy):   '┷',
+	createDir(BoxHeavy, BoxNone, BoxSingle, BoxSingle):  '┸',
+	createDir(BoxHeavy, BoxNone, BoxSingle, BoxHeavy):   '┺',
+	createDir(BoxSingle, BoxNone, BoxHeavy, BoxSingle):  '┵',
+	createDir(BoxHeavy, BoxNone, BoxHeavy, BoxSingle):   '┹',
+	createDir(BoxSingle, BoxNone, BoxSingle, BoxHeavy):  '┶',
 	// T-Down
-	createDir(BoxNone, BoxSingle, BoxSingle, BoxSingle): "┬",
-	createDir(BoxNone, BoxDouble, BoxDouble, BoxDouble): "╦",
-	createDir(BoxNone, BoxSingle, BoxDouble, BoxDouble): "╤",
-	createDir(BoxNone, BoxDouble, BoxSingle, BoxSingle): "╥",
-	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxHeavy):    "┳",
-	createDir(BoxNone, BoxSingle, BoxHeavy, BoxHeavy):   "┯",
-	createDir(BoxNone, BoxHeavy, BoxSingle, BoxSingle):  "┰",
-	createDir(BoxNone, BoxHeavy, BoxSingle, BoxHeavy):   "┲",
-	createDir(BoxNone, BoxSingle, BoxHeavy, BoxSingle):  "┭",
-	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxSingle):   "┱",
-	createDir(BoxNone, BoxSingle, BoxSingle, BoxHeavy):  "┮",
+	createDir(BoxNone, BoxSingle, BoxSingle, BoxSingle): '┬',
+	createDir(BoxNone, BoxDouble, BoxDouble, BoxDouble): '╦',
+	createDir(BoxNone, BoxSingle, BoxDouble, BoxDouble): '╤',
+	createDir(BoxNone, BoxDouble, BoxSingle, BoxSingle): '╥',
+	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxHeavy):    '┳',
+	createDir(BoxNone, BoxSingle, BoxHeavy, BoxHeavy):   '┯',
+	createDir(BoxNone, BoxHeavy, BoxSingle, BoxSingle):  '┰',
+	createDir(BoxNone, BoxHeavy, BoxSingle, BoxHeavy):   '┲',
+	createDir(BoxNone, BoxSingle, BoxHeavy, BoxSingle):  '┭',
+	createDir(BoxNone, BoxHeavy, BoxHeavy, BoxSingle):   '┱',
+	createDir(BoxNone, BoxSingle, BoxSingle, BoxHeavy):  '┮',
 	// T-Left
-	createDir(BoxSingle, BoxSingle, BoxSingle, BoxNone): "┤",
-	createDir(BoxDouble, BoxDouble, BoxSingle, BoxNone): "╣",
-	createDir(BoxDouble, BoxDouble, BoxSingle, BoxNone): "╢",
-	createDir(BoxSingle, BoxSingle, BoxDouble, BoxNone): "╡",
-	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxNone):    "┫",
-	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxNone):   "┨",
-	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxNone):  "┥",
-	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxNone):   "┪",
-	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxNone):  "┦",
-	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxNone):   "┩",
-	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxNone):  "┧",
+	createDir(BoxSingle, BoxSingle, BoxSingle, BoxNone): '┤',
+	createDir(BoxDouble, BoxDouble, BoxSingle, BoxNone): '╣',
+	createDir(BoxDouble, BoxDouble, BoxSingle, BoxNone): '╢',
+	createDir(BoxSingle, BoxSingle, BoxDouble, BoxNone): '╡',
+	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxNone):    '┫',
+	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxNone):   '┨',
+	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxNone):  '┥',
+	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxNone):   '┪',
+	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxNone):  '┦',
+	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxNone):   '┩',
+	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxNone):  '┧',
 	// T-Right
-	createDir(BoxSingle, BoxSingle, BoxNone, BoxSingle): "├",
-	createDir(BoxDouble, BoxDouble, BoxNone, BoxDouble): "╠",
-	createDir(BoxDouble, BoxDouble, BoxNone, BoxSingle): "╟",
-	createDir(BoxSingle, BoxSingle, BoxNone, BoxDouble): "╞",
-	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxHeavy):    "┣",
-	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxSingle):   "┠",
-	createDir(BoxSingle, BoxSingle, BoxNone, BoxHeavy):  "┝",
-	createDir(BoxSingle, BoxHeavy, BoxNone, BoxHeavy):   "┢",
-	createDir(BoxHeavy, BoxSingle, BoxNone, BoxSingle):  "┞",
-	createDir(BoxHeavy, BoxSingle, BoxNone, BoxHeavy):   "┡",
-	createDir(BoxSingle, BoxHeavy, BoxNone, BoxSingle):  "┟",
+	createDir(BoxSingle, BoxSingle, BoxNone, BoxSingle): '├',
+	createDir(BoxDouble, BoxDouble, BoxNone, BoxDouble): '╠',
+	createDir(BoxDouble, BoxDouble, BoxNone, BoxSingle): '╟',
+	createDir(BoxSingle, BoxSingle, BoxNone, BoxDouble): '╞',
+	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxHeavy):    '┣',
+	createDir(BoxHeavy, BoxHeavy, BoxNone, BoxSingle):   '┠',
+	createDir(BoxSingle, BoxSingle, BoxNone, BoxHeavy):  '┝',
+	createDir(BoxSingle, BoxHeavy, BoxNone, BoxHeavy):   '┢',
+	createDir(BoxHeavy, BoxSingle, BoxNone, BoxSingle):  '┞',
+	createDir(BoxHeavy, BoxSingle, BoxNone, BoxHeavy):   '┡',
+	createDir(BoxSingle, BoxHeavy, BoxNone, BoxSingle):  '┟',
 	// Cross
-	createDir(BoxSingle, BoxSingle, BoxSingle, BoxSingle): "┼",
-	createDir(BoxDouble, BoxDouble, BoxDouble, BoxDouble): "╬",
-	createDir(BoxSingle, BoxSingle, BoxDouble, BoxDouble): "╪",
-	createDir(BoxDouble, BoxDouble, BoxSingle, BoxSingle): "╫",
-	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxHeavy):     "╋",
-	createDir(BoxSingle, BoxSingle, BoxHeavy, BoxHeavy):   "┿",
-	createDir(BoxHeavy, BoxHeavy, BoxSingle, BoxSingle):   "╂",
-	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxHeavy):    "╈",
-	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxSingle):  "╀",
-	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxHeavy):    "╇",
-	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxSingle):  "╁",
-	createDir(BoxHeavy, BoxHeavy, BoxSingle, BoxHeavy):    "╊",
-	createDir(BoxSingle, BoxSingle, BoxHeavy, BoxSingle):  "┽",
-	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxSingle):    "╉",
-	createDir(BoxSingle, BoxSingle, BoxSingle, BoxHeavy):  "┾",
-	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxHeavy):   "╆",
-	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxSingle):   "╃",
-	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxSingle):   "╅",
-	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxHeavy):   "╄",
+	createDir(BoxSingle, BoxSingle, BoxSingle, BoxSingle): '┼',
+	createDir(BoxDouble, BoxDouble, BoxDouble, BoxDouble): '╬',
+	createDir(BoxSingle, BoxSingle, BoxDouble, BoxDouble): '╪',
+	createDir(BoxDouble, BoxDouble, BoxSingle, BoxSingle): '╫',
+	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxHeavy):     '╋',
+	createDir(BoxSingle, BoxSingle, BoxHeavy, BoxHeavy):   '┿',
+	createDir(BoxHeavy, BoxHeavy, BoxSingle, BoxSingle):   '╂',
+	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxHeavy):    '╈',
+	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxSingle):  '╀',
+	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxHeavy):    '╇',
+	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxSingle):  '╁',
+	createDir(BoxHeavy, BoxHeavy, BoxSingle, BoxHeavy):    '╊',
+	createDir(BoxSingle, BoxSingle, BoxHeavy, BoxSingle):  '┽',
+	createDir(BoxHeavy, BoxHeavy, BoxHeavy, BoxSingle):    '╉',
+	createDir(BoxSingle, BoxSingle, BoxSingle, BoxHeavy):  '┾',
+	createDir(BoxSingle, BoxHeavy, BoxSingle, BoxHeavy):   '╆',
+	createDir(BoxHeavy, BoxSingle, BoxHeavy, BoxSingle):   '╃',
+	createDir(BoxSingle, BoxHeavy, BoxHeavy, BoxSingle):   '╅',
+	createDir(BoxHeavy, BoxSingle, BoxSingle, BoxHeavy):   '╄',
 }
