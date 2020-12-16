@@ -102,6 +102,11 @@ func (bt BoxType) HeavyIf(c bool) BoxType {
 	return ConditionalBoxType(c, BoxHeavy, bt)
 }
 
+func Lookup(char rune) (parts BoxParts,ok bool) {
+	parts,ok = reverseLookup[char]
+	return parts,ok
+}
+
 // ----------------------------------------------------------------------------------------------------------------------------
 // Implementation
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -229,4 +234,13 @@ var boxParts = map[BoxParts]rune{
 	BoxParts{BoxHeavy, BoxSingle, BoxHeavy, BoxSingle}:   '╃',
 	BoxParts{BoxSingle, BoxHeavy, BoxHeavy, BoxSingle}:   '╅',
 	BoxParts{BoxHeavy, BoxSingle, BoxSingle, BoxHeavy}:   '╄',
+}
+
+var reverseLookup = make(map[rune]BoxParts, len(boxParts))
+
+func init() {
+	// Create reverse lookup
+	for parts,char := range boxParts {
+		reverseLookup[char] = parts
+	}
 }
