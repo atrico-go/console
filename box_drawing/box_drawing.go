@@ -1,4 +1,4 @@
-package console
+package box_drawing
 
 import (
 	"fmt"
@@ -102,9 +102,9 @@ func (bt BoxType) HeavyIf(c bool) BoxType {
 	return ConditionalBoxType(c, BoxHeavy, bt)
 }
 
-func Lookup(char rune) (parts BoxParts,ok bool) {
-	parts,ok = reverseLookup[char]
-	return parts,ok
+func Lookup(char rune) (parts BoxParts, ok bool) {
+	parts, ok = reverseLookup[char]
+	return parts, ok
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------
@@ -192,12 +192,12 @@ var boxParts = map[BoxParts]rune{
 	BoxParts{BoxNone, BoxSingle, BoxSingle, BoxHeavy}:  '┮',
 	// T-Left
 	BoxParts{BoxSingle, BoxSingle, BoxSingle, BoxNone}: '┤',
-	BoxParts{BoxDouble, BoxDouble, BoxSingle, BoxNone}: '╣',
+	BoxParts{BoxDouble, BoxDouble, BoxDouble, BoxNone}: '╣',
 	BoxParts{BoxDouble, BoxDouble, BoxSingle, BoxNone}: '╢',
 	BoxParts{BoxSingle, BoxSingle, BoxDouble, BoxNone}: '╡',
 	BoxParts{BoxHeavy, BoxHeavy, BoxHeavy, BoxNone}:    '┫',
-	BoxParts{BoxSingle, BoxHeavy, BoxHeavy, BoxNone}:   '┨',
-	BoxParts{BoxHeavy, BoxSingle, BoxSingle, BoxNone}:  '┥',
+	BoxParts{BoxHeavy, BoxHeavy, BoxSingle, BoxNone}:   '┨',
+	BoxParts{BoxSingle, BoxSingle, BoxHeavy, BoxNone}:  '┥',
 	BoxParts{BoxSingle, BoxHeavy, BoxHeavy, BoxNone}:   '┪',
 	BoxParts{BoxHeavy, BoxSingle, BoxSingle, BoxNone}:  '┦',
 	BoxParts{BoxHeavy, BoxSingle, BoxHeavy, BoxNone}:   '┩',
@@ -240,7 +240,7 @@ var reverseLookup = make(map[rune]BoxParts, len(boxParts))
 
 func init() {
 	// Create reverse lookup
-	for parts,char := range boxParts {
+	for parts, char := range boxParts {
 		reverseLookup[char] = parts
 	}
 }
