@@ -1,6 +1,7 @@
 package box_drawing
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 )
@@ -27,6 +28,24 @@ func (bt BoxType) String() string {
 		return "Heavy"
 	}
 	panic("Unknown box type")
+}
+
+// Tolerant parsing
+// accepts BoxXXX or just XXX
+// Ignores case
+func ParseBoxType(str string) (bt BoxType, err error) {
+	switch strings.TrimPrefix(strings.ToLower(str), "box") {
+	case "none":
+		return BoxNone,nil
+	case "single":
+		return BoxSingle,nil
+	case "double":
+		return BoxDouble,nil
+	case "heavy":
+		return BoxHeavy,nil
+	default:
+		return BoxNone, errors.New(fmt.Sprintf("invalid box type: %s", str))
+	}
 }
 
 type BoxParts struct {
